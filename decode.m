@@ -17,21 +17,21 @@ end
 %}
 
 %%%read phi with object
-I_1= imread('C:\Users\Isabel\Documents\MATLAB\System design\27012020\fringe 5.bmp');
+I_1= imread('D:\IC\Master degree\Laboratory\System Design\experiment\28012020\fringe 9.bmp');
 %I_1= imread('Sample 1.bmp');
  %figure(1); imshow(I_1)
  %title ('Imagen de intensidad 1')
 [m n] = size(I_1);
-I_2= imread('C:\Users\Isabel\Documents\MATLAB\System design\27012020\fringe 6.bmp');
+I_2= imread('D:\IC\Master degree\Laboratory\System Design\experiment\28012020\fringe 10.bmp');
 %I_2= imread('Sample 2.bmp');
  %figure(2); imshow(I_2)
  %title('Imagen de intensidad 2')
  
-I_3= imread('C:\Users\Isabel\Documents\MATLAB\System design\27012020\fringe 7.bmp');
+I_3= imread('D:\IC\Master degree\Laboratory\System Design\experiment\28012020\fringe 11.bmp');
 %I_3= imread('Sample 3.bmp');
  %figure(3); imshow(I_3)
  %title('Imagen de intensidad 3')
-I_4= imread('C:\Users\Isabel\Documents\MATLAB\System design\27012020\fringe 8.bmp');
+I_4= imread('D:\IC\Master degree\Laboratory\System Design\experiment\28012020\fringe 12.bmp');
 
  
 I_1=mat2gray((I_1), [0 100000]); %mat2gray converts the matrix to an intensity image I that contains values in the range 0 (black) to 1 (white). amin and amax are the values in A that correspond to 0 and 1 in I. Values less than amin become 0, and values greater than amax become 1.
@@ -78,26 +78,26 @@ B=(I_1 - I_3);
 
  
 %figure(102);imshow(mat2gray(im2double(gamma)))
-figure(4);imshow(mat2gray(im2double(phi)), 'DisplayRange', []);%im2double(I) converts the image I to double precision
+%figure(4);imshow(mat2gray(im2double(phi)), 'DisplayRange', []);%im2double(I) converts the image I to double precision
 % figura=imcrop(figure(4))
 % saveas(gcf,'wraped.png')
 
 %%%read phi without object
-I_1_0= imread('C:\Users\Isabel\Documents\MATLAB\System design\27012020\only fringe 5.bmp');
+I_1_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\28012020\only fringe 9.bmp');
 %I_1= imread('Sample 1.bmp');
  %figure(1); imshow(I_1)
  %title ('Imagen de intensidad 1')
 [m n] = size(I_1);
-I_2_0= imread('C:\Users\Isabel\Documents\MATLAB\System design\27012020\only fringe 6.bmp');
+I_2_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\28012020\only fringe 10.bmp');
 %I_2= imread('Sample 2.bmp');
  %figure(2); imshow(I_2)
  %title('Imagen de intensidad 2')
  
-I_3_0= imread('C:\Users\Isabel\Documents\MATLAB\System design\27012020\only fringe 7.bmp');
+I_3_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\28012020\only fringe 11.bmp');
 %I_3= imread('Sample 3.bmp');
  %figure(3); imshow(I_3)
  %title('Imagen de intensidad 3')
-I_4_0= imread('C:\Users\Isabel\Documents\MATLAB\System design\27012020\only fringe 8.bmp');
+I_4_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\28012020\only fringe 12.bmp');
 
  
 I_1_0=mat2gray((I_1_0), [0 100000]); %mat2gray converts the matrix to an intensity image I that contains values in the range 0 (black) to 1 (white). amin and amax are the values in A that correspond to 0 and 1 in I. Values less than amin become 0, and values greater than amax become 1.
@@ -332,7 +332,10 @@ toc;
 
 
 unwrap_img_0 = unwrap_phase(phi_0);
+unwrap_img_0 = unwrap_phase(unwrap_img_0);
 
+%figure(12);
+%imshow(unwrap_img_0(512,:));
 
 %figure(9)
 imshow(unwrap_img,[])
@@ -365,7 +368,12 @@ unwrap_img_0 = unwrap_img_0 - ave_col1_0;
 delta_phi = unwrap_img - unwrap_img_0;
 
 unwrap_img = unwrap_phase(delta_phi);
-%unwrap_img = unwrap_phase(unwrap_img);
+unwrap_img = unwrap_phase(unwrap_img);
+
+
+TF = ischange(unwrap_img,'linear');
+
+%unwrap_img = 
 
 %{
 for i=1:n
@@ -375,10 +383,11 @@ for i=1:m
  image1_unwrapped(i,:) = unwrap(image1_unwrapped(i,:));
 end
 %} 
-figure(10)
-imshow(unwrap_img,[])
+%figure(10)
+%imshow(unwrap_img,[])
 
-figure(20),mesh(unwrap_img)
+%figure(20),mesh(unwrap_img)
+%plot(unwrap_img(512,:))
 
 
 function res_img = unwrap_phase(img)
