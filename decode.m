@@ -370,10 +370,39 @@ delta_phi = unwrap_img - unwrap_img_0;
 unwrap_img = unwrap_phase(delta_phi);
 unwrap_img = unwrap_phase(unwrap_img);
 
-
+%{
+%automatic noise treatment
 TF = ischange(unwrap_img,'linear');
+[x,y]=find(TF==1);
+xyCoords = [x,y];
+%{
+%find the upper right corner noise pixels
+x1 = xyCoords(:,1) >= 550;
+% Now determine when y is in range.
+y1 = xyCoords(:,2) >= 848;
+% Now determine when both x and y are in range.
+both_in_range = x1 & y1;
+% Now extract those rows where both are in range.
+out = xyCoords(both_in_range, :);%cropped coordinates
+x2 = out(:,1);%cropped x coordinate
+y2 = out(:,2);%cropped y coordinate
+%}
 
-%unwrap_img = 
+for i = 1:length(x)
+    A = unwrap_img(x(i,1)-2:x(i,1)+2,y(i,1)-2:y(i,1)+2);
+    unwrap_img(x(i),y(i)) = mean(mean(A),2);
+end
+
+TF2 = ischange(unwrap_img,'linear');
+[x3,y3]=find(TF2==1);
+%}
+
+%manual noise treatment
+[x4 y4]=find(unwrap_img>=3);
+for i = 1:length(x4)
+    A = unwrap_img(x4(i,1)-25:x4(i,1)+25,y4(i,1)-25:y4(i,1)+25);
+    unwrap_img(x4(i),y4(i)) = mean(mean(A),2);
+end
 
 %{
 for i=1:n
@@ -386,7 +415,7 @@ end
 %figure(10)
 %imshow(unwrap_img,[])
 
-%figure(20),mesh(unwrap_img)
+figure(20),mesh(unwrap_img)
 %plot(unwrap_img(512,:))
 
 
