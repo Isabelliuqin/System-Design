@@ -85,6 +85,54 @@ end
 %phi_corrected_0 = phi_0 - ave_col1_0;
 
 delta_phi = phi - phi_0;
+
+%%%noise prefilter
+alpha = pi/3;
+beta = 1;
+gamma = 0.7;
+G = 7;
+H1 = [];
+H2 = [];
+H3 = [];
+for i = 3:1022
+    for j = 3:1278
+        window = delta_phi(i-2:i+2,j-2:j+2);
+        for p = 1:5
+            for q = 1:5
+                if window(p,q) < -alpha
+                    H1 = [H1 window(p,q)];
+                    
+                elseif window(p,q) >= -alpha & window(p,q) <= alpha
+                    H2 = [H2 window(p,q)];
+                
+                else window(p,q) > alpha;
+                    H3 = [H3 window(p,q)];
+                    
+                end
+            end
+        end
+        if length(H2) > beta*(length(H1)+length(H3))
+            delta_phi(i,j) = mean(H1) + mean(H2) + mean(H3);
+        elseif length(H2)<= beta*(length(H1)+length(H3)) & length(H3) > length(H1) & length(H3) < gamma*G & length(H1) < length(H2)
+            delta_phi(i,j) = mean(H2) + mean(H3);
+        elseif length(H2)<= beta*(length(H1)+length(H3)) & length(H1) >= length(H3) & length(H1) < gamma*G & length(H3) < length(H2)
+            delta_phi(i,j) = mean(H1) + mean(H2);
+        elseif length(H2)<= beta*(length(H1)+length(H3)) & length(H3) > length(H1) & length(H3)>= gamma*G
+            delta_phi(i,j) = mean(H3);
+        elseif length(H2)<= beta*(length(H1)+length(H3)) & length(H3) > length(H1) & length(H1)>=length(H2)
+            delta_phi(i,j) = mean(H3);
+        elseif length(H2)<= beta*(length(H1)+length(H3)) & length(H1) >= length(H3) & length(H1)<= gamma*G
+            delta_phi(i,j) = mean(H1);
+        else length(H2)<= beta*(length(H1)+length(H3)) & length(H1) >= length(H3) & length(H3)>= length(H2)
+            delta_phi(i,j) = mean(H1);
+        end
+    end
+end
+
+
+
+                    
+
 %{
 %manual noise treatment
 [x4 y4]=find(delta_phi<-5);
@@ -114,9 +162,9 @@ function res_img = unwrap_phase(img)
     [h_edges, v_edges] = get_edges(reliability); % (Ny,Nx) and (Ny,Nx)
 
     % combine all edges and sort it
-    edges = [h_edges(:); v_edges(:)];
+    edges = [h_edges(:); v_edges(:)]; %form a matrix of reliability of edges
     edge_bound_idx = Ny * Nx; % if i <= edge_bound_idx, it is h_edges
-    [~, edge_sort_idx] = sort(edges, 'descend');
+    [~, edge_sort_idx] = sort(edges, 'descend');  %sort reliability of edges from the largest to the lowest
 
     % get the indices of pixels adjacent to the edges
     idxs1 = mod(edge_sort_idx - 1, edge_bound_idx) + 1;
@@ -196,19 +244,19 @@ function rel = get_reliability(img)
     rel = zeros(size(img));
 
     % get the shifted images (N-2, N-2)
-    img_im1_jm1 = img(1:end-2, 1:end-2);
-    img_i_jm1   = img(2:end-1, 1:end-2);
-    img_ip1_jm1 = img(3:end  , 1:end-2);
-    img_im1_j   = img(1:end-2, 2:end-1);
-    img_i_j     = img(2:end-1, 2:end-1);
-    img_ip1_j   = img(3:end  , 2:end-1);
-    img_im1_jp1 = img(1:end-2, 3:end  );
-    img_i_jp1   = img(2:end-1, 3:end  );
-    img_ip1_jp1 = img(3:end  , 3:end  );
+    img_im1_jm1 = img(1:end-2, 1:end-2); %phi(i-1,j-1)
+    img_i_jm1   = img(2:end-1, 1:end-2); %phi(i,j-1)
+    img_ip1_jm1 = img(3:end  , 1:end-2); %phi(i+2,j-1)
+    img_im1_j   = img(1:end-2, 2:end-1); %phi(i-1,j)
+    img_i_j     = img(2:end-1, 2:end-1); %phi(i,j)
+    img_ip1_j   = img(3:end  , 2:end-1); %phi(i+1,j)
+    img_im1_jp1 = img(1:end-2, 3:end  ); %phi(i-1,j+1)
+    img_i_jp1   = img(2:end-1, 3:end  ); %phi(i,j+1)
+    img_ip1_jp1 = img(3:end  , 3:end  ); %phi(i+1.j+1)
 
     % calculate the difference
     gamma = @(x) sign(x) .* mod(abs(x), pi);
-    H  = gamma(img_im1_j   - img_i_j) - gamma(img_i_j - img_ip1_j  );
+    H  = gamma(img_im1_j   - img_i_j) - gamma(img_i_j - img_ip1_j  );%a matrix containing all H for each pixel(i,j)
     V  = gamma(img_i_jm1   - img_i_j) - gamma(img_i_j - img_i_jp1  );
     D1 = gamma(img_im1_jm1 - img_i_j) - gamma(img_i_j - img_ip1_jp1);
     D2 = gamma(img_im1_jp1 - img_i_j) - gamma(img_i_j - img_ip1_jm1);
@@ -217,7 +265,7 @@ function rel = get_reliability(img)
     D = sqrt(H.*H + V.*V + D1.*D1 + D2.*D2);
 
     % assign the reliability as 1 / D
-    rel(2:end-1, 2:end-1) = 1./D;
+    rel(2:end-1, 2:end-1) = 1./D; %reliability for all pixels are calculated
 
     % assign all nan's in rel with non-nan in img to 0
     % also assign the nan's in img to nan
@@ -225,9 +273,9 @@ function rel = get_reliability(img)
     rel(isnan(img)) = nan;
 end
 
-function [h_edges, v_edges] = get_edges(rel)
+function [h_edges, v_edges] = get_edges(rel) %get reliability of horizontal edges and vertical edges 
     [Ny, Nx] = size(rel);
-    h_edges = [rel(1:end, 2:end) + rel(1:end, 1:end-1), nan(Ny, 1)];
+    h_edges = [rel(1:end, 2:end) + rel(1:end, 1:end-1), nan(Ny, 1)];  %a matrix calculated reliability of horizontal edges for all pixel edges
     v_edges = [rel(2:end, 1:end) + rel(1:end-1, 1:end); nan(1, Nx)];
 end
 
