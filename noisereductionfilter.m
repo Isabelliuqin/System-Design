@@ -88,33 +88,58 @@ delta_phi_o = phi - phi_0;
 delta_phi_o(isnan(delta_phi_o))=0; %set all NaN value in deltaphi =0
 
 delta_phi_a = delta_phi_o;
+
+
+
 %%%noise prefilter
-alpha = pi/3;
+alpha = pi/2;
 beta = 1;
-gamma = 0.7;
-G = 5;
+gamma = 0.5;
+windowsize = 9;
 
 
-for i = 450:512
-    for j = 450:512
-        window = delta_phi_o(i-2:i+2,j-2:j+2);
+for i = 400:512
+    for j = 400:512
+        window = delta_phi_o(i-4:i+4,j-4:j+4);
         H1 = [];
         H2 = [];
         H3 = [];
-        for p = 1:5
-            for q = 1:5
+        for p = 1:windowsize
+            for q = 1:windowsize
+                if p == 1 & q ~= 1 & q ~= windowsize
+                    if abs(window(p,q+1) - window(p,q)) > pi & abs(window(p,q) - window(p,q-1)) > pi
+                        window(p,q) = 0;
+                    else
+                    end
+                elseif p == windowsize & q ~= 1 & q ~= windowsize
+                     if abs(window(p,q+1) - window(p,q)) > pi & abs(window(p,q) - window(p,q-1)) > pi
+                        window(p,q) = 0;
+                    else
+                     end
+                
+                elseif q ~= 1 & q ~= windowsize
+                    if abs(window(p+1,q) - window(p,q)) > pi & abs(window(p,q) - window(p-1,q)) > pi
+                        window(p,q) = 0;
+                    else
+                    end
+                else
+                end
+                
                 if window(p,q) < -alpha
                     H1 = [H1 window(p,q)];
                     
-                elseif window(p,q) >= -alpha & window(p,q) <= alpha
+                elseif window(p,q) >= -alpha & window(p,q) <= alpha & window(p,q)~=0
                     H2 = [H2 window(p,q)];
                 
                 elseif window(p,q) > alpha
                     H3 = [H3 window(p,q)];
-                    
+                else
+                 
                 end
             end
         end
+        
+        G = length(H1) + length(H2) + length(H3);
         if isempty(H1)
             H1(1) = 0;
         end
@@ -125,25 +150,25 @@ for i = 450:512
             H3(1) = 0;
         end
         if length(H2) > beta*(length(H1)+length(H3))
-            delta_phi_a(i,j) = mean(H1) + mean(H2) + mean(H3);
+            delta_phi_a(i,j) = median([H1 H2 H3]);
         elseif length(H2)<= beta*(length(H1)+length(H3)) & length(H3) > length(H1) & length(H3) < gamma*G & length(H1) < length(H2)
-            delta_phi_a(i,j) = mean(H2) + mean(H3);
+            delta_phi_a(i,j) = median([H2 H3]);
         elseif length(H2)<= beta*(length(H1)+length(H3)) & length(H1) >= length(H3) & length(H1) < gamma*G & length(H3) < length(H2)
-            delta_phi_a(i,j) = mean(H1) + mean(H2);
+            delta_phi_a(i,j) = median([H1 H2]);
         elseif length(H2)<= beta*(length(H1)+length(H3)) & length(H3) > length(H1) & length(H3)>= gamma*G
-            delta_phi_a(i,j) = mean(H3);
+            delta_phi_a(i,j) = median(H3);
         elseif length(H2)<= beta*(length(H1)+length(H3)) & length(H3) > length(H1) & length(H1)>=length(H2)
-            delta_phi_a(i,j) = mean(H3);
+            delta_phi_a(i,j) = median(H3);
         elseif length(H2)<= beta*(length(H1)+length(H3)) & length(H1) >= length(H3) & length(H1)<= gamma*G
-            delta_phi_a(i,j) = mean(H1);
+            delta_phi_a(i,j) = median(H1);
         elseif length(H2)<= beta*(length(H1)+length(H3)) & length(H1) >= length(H3) & length(H3)>= length(H2)
-            delta_phi_a(i,j) = mean(H1);
+            delta_phi_a(i,j) = median(H1);
         end
     end
 end
 
 delta_phi_a(isnan(delta_phi_a))=0; %set all NaN value in deltaphi =0
-
+filtereffect = delta_phi_a - delta_phi_o;
                     
 
 %{
