@@ -17,21 +17,21 @@ end
 %}
 
 %%%read phi with object
-I_1= imread('D:\IC\Master degree\Laboratory\System Design\experiment\28012020\fringe 9.bmp');
+I_1= imread('D:\IC\Master degree\Laboratory\System Design\experiment\07022020\fringe 1 f50.bmp');
 %I_1= imread('Sample 1.bmp');
  %figure(1); imshow(I_1)
  %title ('Imagen de intensidad 1')
 [m n] = size(I_1);
-I_2= imread('D:\IC\Master degree\Laboratory\System Design\experiment\28012020\fringe 10.bmp');
+I_2= imread('D:\IC\Master degree\Laboratory\System Design\experiment\07022020\fringe 2 f50.bmp');
 %I_2= imread('Sample 2.bmp');
  %figure(2); imshow(I_2)
  %title('Imagen de intensidad 2')
  
-I_3= imread('D:\IC\Master degree\Laboratory\System Design\experiment\28012020\fringe 11.bmp');
+I_3= imread('D:\IC\Master degree\Laboratory\System Design\experiment\07022020\fringe 3 f50.bmp');
 %I_3= imread('Sample 3.bmp');
  %figure(3); imshow(I_3)
  %title('Imagen de intensidad 3')
-I_4= imread('D:\IC\Master degree\Laboratory\System Design\experiment\28012020\fringe 12.bmp');
+I_4= imread('D:\IC\Master degree\Laboratory\System Design\experiment\07022020\fringe 4 f50.bmp');
 
  
 I_1=mat2gray((I_1), [0 100000]); %mat2gray converts the matrix to an intensity image I that contains values in the range 0 (black) to 1 (white). amin and amax are the values in A that correspond to 0 and 1 in I. Values less than amin become 0, and values greater than amax become 1.
@@ -83,21 +83,21 @@ B=(I_1 - I_3);
 % saveas(gcf,'wraped.png')
 
 %%%read phi without object
-I_1_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\28012020\only fringe 9.bmp');
-%I_1= imread('Sample 1.bmp');
- %figure(1); imshow(I_1)
+I_1_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\07022020\only fringe 1 f50.bmp');
+%I_1_0= imread('Sample 1.bmp');
+ figure(1); imshow(I_1_0)
  %title ('Imagen de intensidad 1')
 [m n] = size(I_1);
-I_2_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\28012020\only fringe 10.bmp');
+I_2_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\07022020\only fringe 2 f50.bmp');
 %I_2= imread('Sample 2.bmp');
  %figure(2); imshow(I_2)
  %title('Imagen de intensidad 2')
  
-I_3_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\28012020\only fringe 11.bmp');
+I_3_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\07022020\only fringe 3 f50.bmp');
 %I_3= imread('Sample 3.bmp');
  %figure(3); imshow(I_3)
  %title('Imagen de intensidad 3')
-I_4_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\28012020\only fringe 12.bmp');
+I_4_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\07022020\only fringe 4 f50.bmp');
 
  
 I_1_0=mat2gray((I_1_0), [0 100000]); %mat2gray converts the matrix to an intensity image I that contains values in the range 0 (black) to 1 (white). amin and amax are the values in A that correspond to 0 and 1 in I. Values less than amin become 0, and values greater than amax become 1.
@@ -361,14 +361,34 @@ Ave_col1 = a(ones(m, n));
 b = ave_col1_0;
 Ave_col1_0 = b(ones(m, n));
 
-unwrap_img = unwrap_img - ave_col1;
+unwrap_img_before = unwrap_img - ave_col1;
 unwrap_img_0 = unwrap_img_0 - ave_col1_0;
 
 
-delta_phi = unwrap_img - unwrap_img_0;
+delta_phi = unwrap_img_before - unwrap_img_0;
 
-unwrap_img = unwrap_phase(delta_phi);
-unwrap_img = unwrap_phase(unwrap_img);
+unwrap_img_after1 = unwrap_phase(delta_phi);
+unwrap_img_after2 = unwrap_phase(unwrap_img_after1);
+
+unwrap_img_after3 = medfilt2(unwrap_img_after2,[10 10]);
+
+%height information
+
+lambda = 41.5;
+worlddist_to_pixel_ratio_mm = 63.5/600;
+pupil_sep_d = 190;
+L = 770;
+
+d = pupil_sep_d(ones(m, n));
+L = L(ones(m, n));
+
+
+AC_pixel = unwrap_img_after3 * lambda /(2*pi);
+
+worlddistance = AC_pixel * worlddist_to_pixel_ratio_mm;
+
+height = (worlddistance .* L)./(d + worlddistance);
+figure (13);mesh(height)
 
 %{
 %automatic noise treatment
@@ -397,13 +417,14 @@ TF2 = ischange(unwrap_img,'linear');
 [x3,y3]=find(TF2==1);
 %}
 
+%{
 %manual noise treatment
 [x4 y4]=find(unwrap_img>=3);
 for i = 1:length(x4)
     A = unwrap_img(x4(i,1)-25:x4(i,1)+25,y4(i,1)-25:y4(i,1)+25);
     unwrap_img(x4(i),y4(i)) = mean(mean(A),2);
 end
-
+%}
 %{
 for i=1:n
  image1_unwrapped(:,i) = unwrap(image1_unwrapped(:,i));
@@ -412,10 +433,10 @@ for i=1:m
  image1_unwrapped(i,:) = unwrap(image1_unwrapped(i,:));
 end
 %} 
-%figure(10)
-%imshow(unwrap_img,[])
+figure(10)
+imshow(unwrap_img_after3,[])
 
-figure(20),mesh(unwrap_img)
+figure(20),mesh(unwrap_img_after3)
 %plot(unwrap_img(512,:))
 
 
