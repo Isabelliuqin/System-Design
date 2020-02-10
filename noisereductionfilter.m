@@ -5,21 +5,21 @@ clc
 
 
 %%%read phi with object
-I_1= imread('D:\IC\Master degree\Laboratory\System Design\experiment\31012020\fringe 9 2.bmp');
+I_1= imread('D:\IC\Master degree\Laboratory\System Design\experiment\03022020second\fringe 1 f50.bmp');
 %I_1= imread('Sample 1.bmp');
  %figure(1); imshow(I_1)
  %title ('Imagen de intensidad 1')
 [m n] = size(I_1);
-I_2= imread('D:\IC\Master degree\Laboratory\System Design\experiment\31012020\fringe 10 2.bmp');
+I_2= imread('D:\IC\Master degree\Laboratory\System Design\experiment\03022020second\fringe 2 f50.bmp');
 %I_2= imread('Sample 2.bmp');
  %figure(2); imshow(I_2)
  %title('Imagen de intensidad 2')
  
-I_3= imread('D:\IC\Master degree\Laboratory\System Design\experiment\31012020\fringe 11 2.bmp');
+I_3= imread('D:\IC\Master degree\Laboratory\System Design\experiment\03022020second\fringe 3 f50.bmp');
 %I_3= imread('Sample 3.bmp');
  %figure(3); imshow(I_3)
  %title('Imagen de intensidad 3')
-I_4= imread('D:\IC\Master degree\Laboratory\System Design\experiment\31012020\fringe 12 2.bmp');
+I_4= imread('D:\IC\Master degree\Laboratory\System Design\experiment\03022020second\fringe 4 f50.bmp');
 
  
 I_1=mat2gray((I_1), [0 100000]); %mat2gray converts the matrix to an intensity image I that contains values in the range 0 (black) to 1 (white). amin and amax are the values in A that correspond to 0 and 1 in I. Values less than amin become 0, and values greater than amax become 1.
@@ -39,21 +39,21 @@ for i=1:m
 end
 
 %%%read phi without object
-I_1_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\31012020\only fringe 9 2.bmp');
+I_1_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\03022020second\only fringe 1 f50.bmp');
 %I_1= imread('Sample 1.bmp');
  %figure(1); imshow(I_1)
  %title ('Imagen de intensidad 1')
 [m n] = size(I_1);
-I_2_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\31012020\only fringe 10 2.bmp');
+I_2_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\03022020second\only fringe 2 f50.bmp');
 %I_2= imread('Sample 2.bmp');
  %figure(2); imshow(I_2)
  %title('Imagen de intensidad 2')
  
-I_3_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\31012020\only fringe 11 2.bmp');
+I_3_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\03022020second\only fringe 3 f50.bmp');
 %I_3= imread('Sample 3.bmp');
  %figure(3); imshow(I_3)
  %title('Imagen de intensidad 3')
-I_4_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\31012020\only fringe 12 2.bmp');
+I_4_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\03022020second\only fringe 4 f50.bmp');
 
  
 I_1_0=mat2gray((I_1_0), [0 100000]); %mat2gray converts the matrix to an intensity image I that contains values in the range 0 (black) to 1 (white). amin and amax are the values in A that correspond to 0 and 1 in I. Values less than amin become 0, and values greater than amax become 1.
@@ -118,7 +118,7 @@ for i = 400:512
                      end
                 
                 elseif q ~= 1 & q ~= windowsize
-                    if abs(window(p+1,q) - window(p,q)) > pi & abs(window(p,q) - window(p-1,q)) > pi
+                    if abs(window(p,q+1) - window(p,q)) > pi & abs(window(p,q) - window(p,q-1)) > pi
                         window(p,q) = 0;
                     else
                     end
@@ -171,19 +171,111 @@ delta_phi_a(isnan(delta_phi_a))=0; %set all NaN value in deltaphi =0
 filtereffect = delta_phi_a - delta_phi_o;
                     
 
-%{
-%manual noise treatment
-[x4 y4]=find(delta_phi<-5);
-for i = 1:length(x4)
-    A = delta_phi(x4(i,1)-1:x4(i,1),y4(i,1)-2:y4(i,1)+2);
-    delta_phi(x4(i),y4(i)) = (sum(sum(A),2)-delta_phi(x4(i),y4(i)))/9;
-    %delta_phi(x4(i),y4(i)) = 0;
-end
-%}
+
 unwrap_img_after1 = unwrap_phase(delta_phi_a);
 unwrap_img_after2 = unwrap_phase(unwrap_img_after1);
 
 unwrap_img_after3 = medfilt2(unwrap_img_after2,[10 10]);
+
+
+%%%fringe period lambda l
+
+%%%read phi with object
+I_1low= imread('D:\IC\Master degree\Laboratory\System Design\experiment\03022020second\fringe 1 f55.bmp');
+%I_1= imread('Sample 1.bmp');
+ %figure(1); imshow(I_1)
+ %title ('Imagen de intensidad 1')
+[m n] = size(I_1low);
+I_2low= imread('D:\IC\Master degree\Laboratory\System Design\experiment\03022020second\fringe 2 f55.bmp');
+%I_2= imread('Sample 2.bmp');
+ %figure(2); imshow(I_2)
+ %title('Imagen de intensidad 2')
+ 
+I_3low= imread('D:\IC\Master degree\Laboratory\System Design\experiment\03022020second\fringe 3 f55.bmp');
+%I_3= imread('Sample 3.bmp');
+ %figure(3); imshow(I_3)
+ %title('Imagen de intensidad 3')
+I_4low= imread('D:\IC\Master degree\Laboratory\System Design\experiment\03022020second\fringe 4 f55.bmp');
+
+ 
+I_1low=mat2gray((I_1low), [0 100000]); %mat2gray converts the matrix to an intensity image I that contains values in the range 0 (black) to 1 (white). amin and amax are the values in A that correspond to 0 and 1 in I. Values less than amin become 0, and values greater than amax become 1.
+I_2low=mat2gray((I_2low), [0 100000]);
+I_3low=mat2gray((I_3low), [0 100000]);
+I_4low=mat2gray((I_4low), [0 100000]);
+
+
+%4 step algorithm
+Alow=(I_4low - I_2low );
+Blow=(I_1low - I_3low);
+
+for i=1:m
+     for j=1:n
+         phi_low(i,j)= atan2(Blow(i,j),Alow(i,j));
+              %pause(0.3)
+     end
+end
+
+
+
+
+
+
+%%%read phi without object
+I_1_0low= imread('D:\IC\Master degree\Laboratory\System Design\experiment\03022020second\only fringe 1 f55.bmp');
+%I_1= imread('Sample 1.bmp');
+ %figure(1); imshow(I_1)
+ %title ('Imagen de intensidad 1')
+[m n] = size(I_1low);
+I_2_0low= imread('D:\IC\Master degree\Laboratory\System Design\experiment\03022020second\only fringe 2 f55.bmp');
+%I_2= imread('Sample 2.bmp');
+ %figure(2); imshow(I_2)
+ %title('Imagen de intensidad 2')
+ 
+I_3_0low= imread('D:\IC\Master degree\Laboratory\System Design\experiment\03022020second\only fringe 3 f55.bmp');
+%I_3= imread('Sample 3.bmp');
+ %figure(3); imshow(I_3)
+ %title('Imagen de intensidad 3')
+I_4_0low= imread('D:\IC\Master degree\Laboratory\System Design\experiment\03022020second\only fringe 4 f55.bmp');
+
+ 
+I_1_0low=mat2gray((I_1_0low), [0 100000]); %mat2gray converts the matrix to an intensity image I that contains values in the range 0 (black) to 1 (white). amin and amax are the values in A that correspond to 0 and 1 in I. Values less than amin become 0, and values greater than amax become 1.
+I_2_0low=mat2gray((I_2_0low), [0 100000]);
+I_3_0low=mat2gray((I_3_0low), [0 100000]);
+I_4_0low=mat2gray((I_4_0low), [0 100000]);
+
+
+%4 step algorithm
+A0low=(I_4_0low - I_2_0low );
+B0low=(I_1_0low - I_3_0low);
+
+for i=1:m
+     for j=1:n
+         phi_0_low(i,j)= atan2(B0low(i,j),A0low(i,j));
+         end
+end
+
+delta_phi_o_low = phi_low - phi_0_low;
+delta_phi_o_low(isnan(delta_phi_o_low))=0; %set all NaN value in deltaphi =0
+
+delta_phi_a_low = delta_phi_o_low;
+
+
+%{
+%%%multifrequency unwrapping
+
+lambda_low = 1024/50;
+lambda_high = 1024/55;
+
+%delta_phi_eq = delta_phi_a_high - delta_phi_a_low;
+%lambda_eq = (lambda_low * lambda_high)/(lambda_low - lambda_high);
+k_h = round(((lambda_low/lambda_high)*unwrap_img_after3 - delta_phi_a)/(2*pi));
+
+delta_phi_unwrapped = delta_phi_a + 2*pi*k_h;
+
+figure (1);mesh(delta_phi_unwrapped);
+figure (2);imshow(delta_phi_unwrapped)
+%}
+
 
 figure(10)
 imshow(unwrap_img_after3,[])
