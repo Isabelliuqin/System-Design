@@ -5,33 +5,28 @@ clear all;
 close all;
 clc
 
-%{
-location = 'C:\Users\Isabel\Documents\MATLAB\System design\*.bmp';       %  folder in which your images exists
-ds = imageDatastore(location)         %  Creates a datastore for all images in your folder
+I_1_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\10022020\only fringe 1 f55.bmp');
 
-while hasdata(ds) 
-    img = read(ds) ;             % read image from datastore
-    figure, imshow(img);    % creates a new window for each image
-end
+A = I_1_0(30,:);
+TF = islocalmin(A);
+[r,c] = find(TF);
+min_value = A(TF);
 
-%}
+tf = min_value < 80; 
+min_value_reshape = min_value(tf);
+Mean_lift = mean(reshape(min_value_reshape,1,[]));
+
 
 %%%read phi with object
-I_1= imread('D:\IC\Master degree\Laboratory\System Design\experiment\07022020\fringe 1 f50.bmp');
-%I_1= imread('Sample 1.bmp');
- %figure(1); imshow(I_1)
- %title ('Imagen de intensidad 1')
+I_1= imread('D:\IC\Master degree\Laboratory\System Design\experiment\10022020\fringe 1 f55.bmp');
+
 [m n] = size(I_1);
-I_2= imread('D:\IC\Master degree\Laboratory\System Design\experiment\07022020\fringe 2 f50.bmp');
-%I_2= imread('Sample 2.bmp');
- %figure(2); imshow(I_2)
- %title('Imagen de intensidad 2')
+I_2= imread('D:\IC\Master degree\Laboratory\System Design\experiment\10022020\fringe 2 f55.bmp');
+
  
-I_3= imread('D:\IC\Master degree\Laboratory\System Design\experiment\07022020\fringe 3 f50.bmp');
-%I_3= imread('Sample 3.bmp');
- %figure(3); imshow(I_3)
- %title('Imagen de intensidad 3')
-I_4= imread('D:\IC\Master degree\Laboratory\System Design\experiment\07022020\fringe 4 f50.bmp');
+I_3= imread('D:\IC\Master degree\Laboratory\System Design\experiment\10022020\fringe 3 f55.bmp');
+
+I_4= imread('D:\IC\Master degree\Laboratory\System Design\experiment\10022020\fringe 4 f55.bmp');
 
  
 I_1=mat2gray((I_1), [0 100000]); %mat2gray converts the matrix to an intensity image I that contains values in the range 0 (black) to 1 (white). amin and amax are the values in A that correspond to 0 and 1 in I. Values less than amin become 0, and values greater than amax become 1.
@@ -48,56 +43,40 @@ I_4=mat2gray((I_4), [0 100000]);
 %A=(sqrt(3)*( I_1 - I_3 ));
 %B=((2*I_2)- I_1 - I_3);
 
-
-
 %4 step algorithm
 A=(I_4 - I_2 );
 B=(I_1 - I_3);
  
-%  i=[1:0.001:];
-%  j=[1:0.001:640];
-%  
+
  for i=1:m
      for j=1:n
          phi(i,j)= atan2(B(i,j),A(i,j));
-%          
-%          Ip=(I_1(i,j) + I_2(i,j) + I_3(i,j))/3;
-%          Ipp= (sqrt((3*((I_1(i,j) - I_3(i,j))^2)) + (((2*I_2(i,j)) - I_1(i,j) - I_3(i,j))^2))/3);
-%          
-%          ip(i,j)=(I_1(i,j) + I_2(i,j) + I_3(i,j))/3;
-%          ipp(i,j)= (sqrt((3*((I_1(i,j) - I_3(i,j))^2)) + (((2*I_2(i,j)) - I_1(i,j) - I_3(i,j))^2))/3);
-%          
-%          gamma(i,j)= Ipp / Ip;
-%          chupa(i,j)=phi(i,j)+gamma(i,j);
-         
-         %pause(0.3)
+
      end
  end
  
-%iT=ip+ipp;
+phi = phi - Mean_lift(ones(m,n));
 
- 
-%figure(102);imshow(mat2gray(im2double(gamma)))
-%figure(4);imshow(mat2gray(im2double(phi)), 'DisplayRange', []);%im2double(I) converts the image I to double precision
-% figura=imcrop(figure(4))
-% saveas(gcf,'wraped.png')
 
 %%%read phi without object
-I_1_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\07022020\only fringe 1 f50.bmp');
-%I_1_0= imread('Sample 1.bmp');
- figure(1); imshow(I_1_0)
- %title ('Imagen de intensidad 1')
+I_1_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\10022020\only fringe 1 f55.bmp');
+
+A = I_1_0(30,:);
+TF = islocalmin(A);
+[r,c] = find(TF);
+min_value = A(TF);
+
+tf = min_value < 80; 
+min_value_reshape = min_value(tf);
+Mean_lift = mean(reshape(min_value_reshape,1,[]));
+
 [m n] = size(I_1);
-I_2_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\07022020\only fringe 2 f50.bmp');
-%I_2= imread('Sample 2.bmp');
- %figure(2); imshow(I_2)
- %title('Imagen de intensidad 2')
+I_2_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\10022020\only fringe 2 f55.bmp');
+
  
-I_3_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\07022020\only fringe 3 f50.bmp');
-%I_3= imread('Sample 3.bmp');
- %figure(3); imshow(I_3)
- %title('Imagen de intensidad 3')
-I_4_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\07022020\only fringe 4 f50.bmp');
+I_3_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\10022020\only fringe 3 f55.bmp');
+
+I_4_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\10022020\only fringe 4 f55.bmp');
 
  
 I_1_0=mat2gray((I_1_0), [0 100000]); %mat2gray converts the matrix to an intensity image I that contains values in the range 0 (black) to 1 (white). amin and amax are the values in A that correspond to 0 and 1 in I. Values less than amin become 0, and values greater than amax become 1.
@@ -114,41 +93,21 @@ I_4_0=mat2gray((I_4_0), [0 100000]);
 %A=(sqrt(3)*( I_1 - I_3 ));
 %B=((2*I_2)- I_1 - I_3);
 
-
-
 %4 step algorithm
 A0=(I_4_0 - I_2_0 );
 B0=(I_1_0 - I_3_0);
  
-%  i=[1:0.001:];
-%  j=[1:0.001:640];
-%  
+
  for i=1:m
      for j=1:n
          phi_0(i,j)= atan2(B0(i,j),A0(i,j));
-%          
-%          Ip=(I_1(i,j) + I_2(i,j) + I_3(i,j))/3;
-%          Ipp= (sqrt((3*((I_1(i,j) - I_3(i,j))^2)) + (((2*I_2(i,j)) - I_1(i,j) - I_3(i,j))^2))/3);
-%          
-%          ip(i,j)=(I_1(i,j) + I_2(i,j) + I_3(i,j))/3;
-%          ipp(i,j)= (sqrt((3*((I_1(i,j) - I_3(i,j))^2)) + (((2*I_2(i,j)) - I_1(i,j) - I_3(i,j))^2))/3);
-%          
-%          gamma(i,j)= Ipp / Ip;
-%          chupa(i,j)=phi(i,j)+gamma(i,j);
-         
-         %pause(0.3)
+
      end
  end
  
-%iT=ip+ipp;
+phi_0 = phi_0 - Mean_lift(ones(m,n));
 
- 
-%figure(102);imshow(mat2gray(im2double(gamma)))
-%figure(40);imshow(mat2gray(im2double(phi_0)), 'DisplayRange', []);%im2double(I) converts the image I to double precision
-% figura=imcrop(figure(4))
-% saveas(gcf,'wraped.png')
-
- 
+%%%UNWRAPPING METHODS
 
 %{
 %%%%%%%%%Unwrapping Method 1%%%%%%%%%%%%%%%%% 
@@ -156,29 +115,10 @@ B0=(I_1_0 - I_3_0);
 %by first sequentially unwrapping the all rows, one at a time.
 
 
-
-
-cut=imread('23012020wraped.png');
-
-%cut =imcrop(imshow(im2double(phi)));%displays the image I in a figure window and creates an interactive Crop Image tool associated with the image
-
-%image1_unwrapped = cut(:,:);%cut(:,:) return the same matrix as cut
-
-%cutsize=size(cut);%size(A) returns a row vector whose elements are the lengths of the corresponding dimensions of A. For example, if A is a 3-by-4 matrix, then size(A) returns the vector [3 4].
-
-%l=0;
-%p=0;
-
-%l=cutsize(1,1);
-%p=cutsize(1,2);
-
-%N=l;
-%M=p;
-
+%Unwrap phi object first
+tic;
 image1_unwrapped = phi;
-%N=m;
-%M=n;
- 
+
 for i=1:n
  image1_unwrapped(:,i) = unwrap(image1_unwrapped(:,i));
  end 
@@ -186,18 +126,20 @@ for i=1:m
  image1_unwrapped(i,:) = unwrap(image1_unwrapped(i,:));
  end
  %Then sequentially unwrap all the columns one at a time
- 
+toc;
+
+%Unwrap reference phi
+
 image1_unwrapped0 = phi_0;
-%N=m;
-%M=n;
- 
+
 for i=1:n
  image1_unwrapped0(:,i) = unwrap(image1_unwrapped0(:,i));
  end 
 for i=1:m
  image1_unwrapped0(i,:) = unwrap(image1_unwrapped0(i,:));
  end 
- 
+
+%delta_phi calculation
 
 figure(5);
 imshow(image1_unwrapped,[])
@@ -219,15 +161,29 @@ image1_unwrapped0 = image1_unwrapped0 - ave_col1_0;
 
 delta_phi = image1_unwrapped-image1_unwrapped0;
 
-[xidx, yidx]= find(delta_phi>25.6690);
-
-
-figure(11)
+figure(55)
 imshow(delta_phi,[])
+
+
+%Noise evaluation
+
+True_h = nu
+
+N = 
+
+Variance = sum((X-True_h)^2)/N
+
+height_array = True_h(one(m,n))
+dif_from_truth = abs(X - height_array)
+total_dif = sum(dif_from_truth, 'all')
 %}
 
 %{
 %%%%%%%%%%%%%%%%%%%%Unwrapping Method 2%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+%Unwrap object phi
+tic;
+image1_unwrapped = phi;
 q=im2double(image1_unwrapped);
 q(400:end,:)=unwrap(q(400:end,:),[],1);
 q=flipud(q);
@@ -236,108 +192,73 @@ q(:,640:end)=unwrap(q(:,640:end),[],2);
 q=fliplr(q);
 q(:,640:end)=unwrap(q(:,640:end),[],2);
 q=flipud(fliplr(q));
-figure(6);
-imshow(q,[]);
-
- 
-figure(7); colormap(gray(256)), imagesc(image1_unwrapped)
-title('Unwrapped phase image using the Itoh algorithm: the first method')
-xlabel('Pixels'), ylabel('Pixels')
-
-%figure(8);mesh(image1_unwrapped,'FaceColor','interp', 'EdgeColor','none', 'FaceLighting','phong')
-view(-30,30), camlight left, axis tight
-title('Unwrapped phase image using the Itoh algorithm: the first method')
-xlabel('Pixels'), ylabel('Pixels'), zlabel('Phase in radians')
-
-%}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%Unwrapping Method 3%%%%%%%%%%%%%%%%%%%%%%%%%%
-%{
-%%%Test phasewrapping
-fprintf('***************************************\n');
-fprintf('2D Phase Unwrapping Demo\n');
-fprintf('Please select the demo:\n');
-fprintf('(1) No noise  , no ignored region\n');
-fprintf(' 2. With noise, no ignored region\n');
-fprintf(' 3. No noise  , with ignored region\n');
-fprintf(' 4. With noise, with ignored region\n');
-while (1)
-    user_input = input('Your selection (1-4): ', 's');
-    user_input = strip(user_input);
-
-    % if the user does not supply anything, select the default
-    if strcmp(user_input, '')
-        fprintf('Demo 1 is selected\n');
-        user_input = '1';
-    end
-
-    if length(user_input) == 1 && sum(user_input == '1234') == 1
-        break;
-    else
-        fprintf('Invalid input\n');
-    end
-end
-
-
-[X, Y] = meshgrid(linspace(-1, 1, 512) * 5);
-img = -(X.*X + Y.*Y);
-fprintf('Image size: %dx%d pixels\n', size(img,1), size(img,2));
-
-% add noise
-if any(user_input == '24')
-    img = img + randn(size(X)) * 0.5;
-end
-
-% add an ignored region
-if any(user_input == '34')
-    img(end/4:3*end/4,end/4:3*end/4) = nan;
-end
-
-% wrap the image
-wimg = wrapTo2Pi(img);
-
-tic;
-unwrap_img = unwrap_phase(wimg);
+image1_unwrapped = q;
 toc;
 
-subplot(221)
-pcolor(img)
-shading flat;
-set(gca, 'ydir', 'reverse');
-title('Original phase');
+%Unwrap reference phi
+image1_unwrapped_0 = phi_0;
+q=im2double(image1_unwrapped_0);
+q(400:end,:)=unwrap(q(400:end,:),[],1);
+q=flipud(q);
+q(400:end,:)=unwrap(q(400:end,:),[],1);
+q(:,640:end)=unwrap(q(:,640:end),[],2);
+q=fliplr(q);
+q(:,640:end)=unwrap(q(:,640:end),[],2);
+q=flipud(fliplr(q));
+image1_unwrapped_0 = q;
 
-subplot(222)
-pcolor(wimg)
-shading flat;
-set(gca, 'ydir', 'reverse');
-title('Wrapped phase');
+figure(6);
+imshow(image1_unwrapped,[])
 
-subplot(223)
-pcolor(unwrap_img)
-shading flat;
-set(gca, 'ydir', 'reverse');
-title('Unwrapped phase');
+figure(60);
+imshow(image1_unwrapped_0,[])
 
-subplot(224)
-pcolor(wrapTo2Pi(unwrap_img))
-shading flat;
-set(gca, 'ydir', 'reverse');
-title('Rewrap of unwrapped phase');
+ave_col1 = mean(image1_unwrapped(:,1));
+ave_col1_0 = mean(image1_unwrapped_0(:,1));
+
+a = ave_col1;
+Ave_col1 = a(ones(m, n));
+
+b = ave_col1_0;
+Ave_col1_0 = b(ones(m, n));
+
+image1_unwrapped = image1_unwrapped - ave_col1;
+image1_unwrapped_0 = image1_unwrapped_0 - ave_col1_0;
+
+delta_phi = image1_unwrapped-image1_unwrapped_0;
+
+figure(66),mesh(delta_phi);
+
+
+%Noise evaluation
+
+True_h = nu;
+
+N = 
+
+Variance = sum((X-True_h)^2)/N;
+
+height_array = True_h(one(m,n));
+dif_from_truth = abs(X - height_array);
+total_dif = sum(dif_from_truth, 'all');
 %}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%Unwrapping Method 3%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %%%method
+
+%Unwrap object phi
 tic;
 unwrap_img = unwrap_phase(phi);
 toc;
 
-
+%Unwrap reference phi
 unwrap_img_0 = unwrap_phase(phi_0);
 unwrap_img_0 = unwrap_phase(unwrap_img_0);
 
-%figure(12);
-%imshow(unwrap_img_0(512,:));
 
-%figure(9)
+%figure(7)
 imshow(unwrap_img,[])
 %pcolor(unwrap_img)
 shading flat;
@@ -345,7 +266,7 @@ set(gca, 'ydir', 'reverse');
 title('Wrapped phase');
 
 
-%figure(90)
+%figure(70)
 imshow(unwrap_img_0,[])
 %pcolor(unwrap_img)
 shading flat;
@@ -372,6 +293,34 @@ unwrap_img_after2 = unwrap_phase(unwrap_img_after1);
 
 unwrap_img_after3 = medfilt2(unwrap_img_after2,[10 10]);
 
+figure(77)
+imshow(unwrap_img_after3,[]);
+figure(78);
+mesh(unwrap_img_after3);
+
+nPixelx = (-512:511);
+nPixely = (-640:639);
+ux = nPixelx/1024;
+uy = nPixely/1280;
+Y_freq = fftshift(fft(fftshift(unwrap_img_after3)))./numel(unwrap_img_after3);
+%Y_freq(abs(Y_freq) > 10^5) = 0;
+unwrap_again = ifft2(Y_freq);
+FINAL_IM = uint8(real(unwrap_again));
+
+
+%{
+%Noise evaluation
+
+True_h = nu;
+
+N = 
+
+Variance = sum((X-True_h)^2)/N;
+
+height_array = True_h(one(m,n));
+dif_from_truth = abs(X - height_array);
+total_dif = sum(dif_from_truth, 'all');
+
 %height information
 
 lambda = 41.5;
@@ -388,14 +337,15 @@ AC_pixel = unwrap_img_after3 * lambda /(2*pi);
 worlddistance = AC_pixel * worlddist_to_pixel_ratio_mm;
 
 height = (worlddistance .* L)./(d + worlddistance);
-figure (13);mesh(height)
+figure (77);mesh(height)
 
+%}
 %{
 %automatic noise treatment
 TF = ischange(unwrap_img,'linear');
 [x,y]=find(TF==1);
 xyCoords = [x,y];
-%{
+
 %find the upper right corner noise pixels
 x1 = xyCoords(:,1) >= 550;
 % Now determine when y is in range.
@@ -406,7 +356,7 @@ both_in_range = x1 & y1;
 out = xyCoords(both_in_range, :);%cropped coordinates
 x2 = out(:,1);%cropped x coordinate
 y2 = out(:,2);%cropped y coordinate
-%}
+
 
 for i = 1:length(x)
     A = unwrap_img(x(i,1)-2:x(i,1)+2,y(i,1)-2:y(i,1)+2);
@@ -417,27 +367,6 @@ TF2 = ischange(unwrap_img,'linear');
 [x3,y3]=find(TF2==1);
 %}
 
-%{
-%manual noise treatment
-[x4 y4]=find(unwrap_img>=3);
-for i = 1:length(x4)
-    A = unwrap_img(x4(i,1)-25:x4(i,1)+25,y4(i,1)-25:y4(i,1)+25);
-    unwrap_img(x4(i),y4(i)) = mean(mean(A),2);
-end
-%}
-%{
-for i=1:n
- image1_unwrapped(:,i) = unwrap(image1_unwrapped(:,i));
- end 
-for i=1:m
- image1_unwrapped(i,:) = unwrap(image1_unwrapped(i,:));
-end
-%} 
-figure(10)
-imshow(unwrap_img_after3,[])
-
-figure(20),mesh(unwrap_img_after3)
-%plot(unwrap_img(512,:))
 
 
 function res_img = unwrap_phase(img)
@@ -566,7 +495,6 @@ function [h_edges, v_edges] = get_edges(rel)
     h_edges = [rel(1:end, 2:end) + rel(1:end, 1:end-1), nan(Ny, 1)];
     v_edges = [rel(2:end, 1:end) + rel(1:end-1, 1:end); nan(1, Nx)];
 end
-
 
 
 
