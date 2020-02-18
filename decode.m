@@ -5,7 +5,9 @@ clear all;
 close all;
 clc
 
-I_1_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\10022020\only fringe 1 f55.bmp');
+%{
+%shift needed to let all min fringe intensity at approx 0
+I_1_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\17022020\only fringes adjusted\only fringe 1 f20.bmp');
 
 A = I_1_0(30,:);
 TF = islocalmin(A);
@@ -18,165 +20,121 @@ Mean_lift = mean(reshape(min_value_reshape,1,[]));
 
 
 %%%read phi with object
-I_1= imread('D:\IC\Master degree\Laboratory\System Design\experiment\10022020\fringe 1 f55.bmp');
+I_1= imread('D:\IC\Master degree\Laboratory\System Design\experiment\17022020\adjusted cone\fringe 1 f20.bmp');
 
 [m n] = size(I_1);
-I_2= imread('D:\IC\Master degree\Laboratory\System Design\experiment\10022020\fringe 2 f55.bmp');
+I_2= imread('D:\IC\Master degree\Laboratory\System Design\experiment\17022020\adjusted cone\fringe 2 f20.bmp');
 
  
-I_3= imread('D:\IC\Master degree\Laboratory\System Design\experiment\10022020\fringe 3 f55.bmp');
+I_3= imread('D:\IC\Master degree\Laboratory\System Design\experiment\17022020\adjusted cone\fringe 3 f20.bmp');
 
-I_4= imread('D:\IC\Master degree\Laboratory\System Design\experiment\10022020\fringe 4 f55.bmp');
+I_4= imread('D:\IC\Master degree\Laboratory\System Design\experiment\17022020\adjusted cone\fringe 4 f20.bmp');
+
+I_5= imread('D:\IC\Master degree\Laboratory\System Design\experiment\17022020\adjusted cone\fringe 5 f20.bmp');
+
+I_6= imread('D:\IC\Master degree\Laboratory\System Design\experiment\17022020\adjusted cone\fringe 6 f20.bmp');
 
  
 I_1=mat2gray((I_1), [0 100000]); %mat2gray converts the matrix to an intensity image I that contains values in the range 0 (black) to 1 (white). amin and amax are the values in A that correspond to 0 and 1 in I. Values less than amin become 0, and values greater than amax become 1.
 I_2=mat2gray((I_2), [0 100000]);
 I_3=mat2gray((I_3), [0 100000]);
 I_4=mat2gray((I_4), [0 100000]);
+I_5=mat2gray((I_5), [0 100000]);
+I_6=mat2gray((I_6), [0 100000]);
 
 
-%Ip=(I_1 + I_2 + I_3)/3;
-%Ipp= (sqrt((3*((I_1 - I_3)^2)) + (((2*I_2) - I_1 - I_3)^2))/3);
-%gamma= Ipp / Ip
-
-%3 step algorithm
-%A=(sqrt(3)*( I_1 - I_3 ));
-%B=((2*I_2)- I_1 - I_3);
-
+%{
 %4 step algorithm
 A=(I_4 - I_2 );
-B=(I_1 - I_3);
- 
 
- for i=1:m
+B=(I_1 - I_3);
+
+
+for i=1:m
      for j=1:n
          phi(i,j)= atan2(B(i,j),A(i,j));
-
+         
      end
- end
+end
+%}
+
+
+%6 step algorithm
+
+%2
+
+A = -sqrt(3)*(I_2 + I_3 - I_5 - I_6);
+B = 2*I_1 + I_2 - I_3 - 2*I_4 - I_5 + I_6;
+
+for i=1:m
+     for j=1:n
+         phi(i,j)= atan2(B(i,j),A(i,j));
+         
+     end
+end
  
+
 phi = phi - Mean_lift(ones(m,n));
 
 
 %%%read phi without object
-I_1_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\10022020\only fringe 1 f55.bmp');
-
-A = I_1_0(30,:);
-TF = islocalmin(A);
-[r,c] = find(TF);
-min_value = A(TF);
-
-tf = min_value < 80; 
-min_value_reshape = min_value(tf);
-Mean_lift = mean(reshape(min_value_reshape,1,[]));
+I_1_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\17022020\only fringes adjusted\only fringe 1 f20.bmp');
 
 [m n] = size(I_1);
-I_2_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\10022020\only fringe 2 f55.bmp');
+I_2_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\17022020\only fringes adjusted\only fringe 2 f20.bmp');
 
  
-I_3_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\10022020\only fringe 3 f55.bmp');
+I_3_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\17022020\only fringes adjusted\only fringe 3 f20.bmp');
 
-I_4_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\10022020\only fringe 4 f55.bmp');
+I_4_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\17022020\only fringes adjusted\only fringe 4 f20.bmp');
+
+I_5_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\17022020\only fringes adjusted\only fringe 5 f20.bmp');
+
+I_6_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\17022020\only fringes adjusted\only fringe 6 f20.bmp');
 
  
 I_1_0=mat2gray((I_1_0), [0 100000]); %mat2gray converts the matrix to an intensity image I that contains values in the range 0 (black) to 1 (white). amin and amax are the values in A that correspond to 0 and 1 in I. Values less than amin become 0, and values greater than amax become 1.
 I_2_0=mat2gray((I_2_0), [0 100000]);
 I_3_0=mat2gray((I_3_0), [0 100000]);
 I_4_0=mat2gray((I_4_0), [0 100000]);
+I_5_0=mat2gray((I_5_0), [0 100000]);
+I_6_0=mat2gray((I_6_0), [0 100000]);
 
-
-%Ip=(I_1 + I_2 + I_3)/3;
-%Ipp= (sqrt((3*((I_1 - I_3)^2)) + (((2*I_2) - I_1 - I_3)^2))/3);
-%gamma= Ipp / Ip
-
-%3 step algorithm
-%A=(sqrt(3)*( I_1 - I_3 ));
-%B=((2*I_2)- I_1 - I_3);
-
+%{
 %4 step algorithm
 A0=(I_4_0 - I_2_0 );
 B0=(I_1_0 - I_3_0);
- 
-
+%{
+A0 = -3*I_2 + 4*I_4 - I_6;
+B0 = I_1 - 4*I_3+3*I_5;
+%}
  for i=1:m
      for j=1:n
          phi_0(i,j)= atan2(B0(i,j),A0(i,j));
 
      end
  end
- 
+%} 
+
+
+%6 step algorithm
+
+%2
+
+A0 = -sqrt(3)*(I_2_0 + I_3_0 - I_5_0 - I_6_0);
+B0 = 2*I_1_0 + I_2_0 - I_3_0 - 2*I_4_0 - I_5_0 + I_6_0;
+
+for i=1:m
+     for j=1:n
+         phi_0(i,j)= atan2(B0(i,j),A0(i,j));
+         
+     end
+end
+
 phi_0 = phi_0 - Mean_lift(ones(m,n));
 
 %%%UNWRAPPING METHODS
 
-%{
-%%%%%%%%%Unwrapping Method 1%%%%%%%%%%%%%%%%% 
-%Unwrap the imaage using the Itoh algorithm: the first method is performed
-%by first sequentially unwrapping the all rows, one at a time.
-
-
-%Unwrap phi object first
-tic;
-image1_unwrapped = phi;
-
-for i=1:n
- image1_unwrapped(:,i) = unwrap(image1_unwrapped(:,i));
- end 
-for i=1:m
- image1_unwrapped(i,:) = unwrap(image1_unwrapped(i,:));
- end
- %Then sequentially unwrap all the columns one at a time
-toc;
-
-%Unwrap reference phi
-
-image1_unwrapped0 = phi_0;
-
-for i=1:n
- image1_unwrapped0(:,i) = unwrap(image1_unwrapped0(:,i));
- end 
-for i=1:m
- image1_unwrapped0(i,:) = unwrap(image1_unwrapped0(i,:));
- end 
-
-%delta_phi calculation
-
-figure(5);
-imshow(image1_unwrapped,[])
-
-figure(50);
-imshow(image1_unwrapped0,[])
-
-ave_col1 = mean(image1_unwrapped(:,1));
-ave_col1_0 = mean(image1_unwrapped0(:,1));
-
-a = ave_col1;
-Ave_col1 = a(ones(m, n));
-
-b = ave_col1_0;
-Ave_col1_0 = b(ones(m, n));
-
-image1_unwrapped = image1_unwrapped - ave_col1;
-image1_unwrapped0 = image1_unwrapped0 - ave_col1_0;
-
-delta_phi = image1_unwrapped-image1_unwrapped0;
-
-figure(55)
-imshow(delta_phi,[])
-
-
-%Noise evaluation
-
-True_h = nu
-
-N = 
-
-Variance = sum((X-True_h)^2)/N
-
-height_array = True_h(one(m,n))
-dif_from_truth = abs(X - height_array)
-total_dif = sum(dif_from_truth, 'all')
-%}
 
 %{
 %%%%%%%%%%%%%%%%%%%%Unwrapping Method 2%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
@@ -243,69 +201,150 @@ dif_from_truth = abs(X - height_array);
 total_dif = sum(dif_from_truth, 'all');
 %}
 
+%%%Noise reduction Filter
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%Unwrapping Method 3%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%method
 
-%Unwrap object phi
-tic;
-unwrap_img = unwrap_phase(phi);
-toc;
 
-%Unwrap reference phi
+%unwrap phi phi_0 indivitually
 unwrap_img_0 = unwrap_phase(phi_0);
-unwrap_img_0 = unwrap_phase(unwrap_img_0);
+unwrap_img = unwrap_phase(phi);
 
 
-%figure(7)
+
+figure(7)
 imshow(unwrap_img,[])
-%pcolor(unwrap_img)
+pcolor(unwrap_img)
 shading flat;
 set(gca, 'ydir', 'reverse');
 title('Wrapped phase');
 
 
-%figure(70)
+figure(70)
 imshow(unwrap_img_0,[])
-%pcolor(unwrap_img)
+pcolor(unwrap_img)
 shading flat;
 set(gca, 'ydir', 'reverse');
 title('Wrapped phase');
 
-ave_col1 = mean(unwrap_img(:,1));
-ave_col1_0 = mean(unwrap_img_0(:,1));
 
-a = ave_col1;
-Ave_col1 = a(ones(m, n));
+delta_phi = unwrap_img - unwrap_img_0;
 
-b = ave_col1_0;
-Ave_col1_0 = b(ones(m, n));
+%Filter object deltaphi
+delta_phi_o = delta_phi;
+delta_phi_o(isnan(delta_phi_o))=0; %set all NaN value in deltaphi =0
 
-unwrap_img_before = unwrap_img - ave_col1;
-unwrap_img_0 = unwrap_img_0 - ave_col1_0;
+delta_phi_a = delta_phi_o;
+
+%%%noise prefilter
+alpha = pi/2;
+beta = 1;
+gamma = 0.5;
+windowsize = 9;
 
 
-delta_phi = unwrap_img_before - unwrap_img_0;
+for i = 5:1018
+    for j = 5:1275
+        window = delta_phi_o(i-4:i+4,j-4:j+4);
+        H1 = [];
+        H2 = [];
+        H3 = [];
+        for p = 1:windowsize
+            for q = 1:windowsize
+                if p == 1 & q ~= 1 & q ~= windowsize
+                    if abs(window(p,q+1) - window(p,q)) > pi & abs(window(p,q) - window(p,q-1)) > pi
+                        window(p,q) = 0;
+                    else
+                    end
+                elseif p == windowsize & q ~= 1 & q ~= windowsize
+                     if abs(window(p,q+1) - window(p,q)) > pi & abs(window(p,q) - window(p,q-1)) > pi
+                        window(p,q) = 0;
+                    else
+                     end
+                
+                elseif q ~= 1 & q ~= windowsize
+                    if abs(window(p,q+1) - window(p,q)) > pi & abs(window(p,q) - window(p,q-1)) > pi
+                        window(p,q) = 0;
+                    elseif abs(window(p+1,q) - window(p)) > pi & abs(window(p,q) - window(p-1,q)) > pi
+                        window(p,q) = 0;
+                    else
+                    end
+                else
+                end
+                
+                if window(p,q) < -alpha
+                    H1 = [H1 window(p,q)];
+                    
+                elseif window(p,q) >= -alpha & window(p,q) <= alpha & window(p,q)~=0
+                    H2 = [H2 window(p,q)];
+                
+                elseif window(p,q) > alpha
+                    H3 = [H3 window(p,q)];
+                else
+                 
+                end
+            end
+        end
+        
+        G = length(H1) + length(H2) + length(H3);
+        if isempty(H1)
+            H1(1) = 0;
+        end
+        if isempty(H2)
+            H2(1) = 0;
+        end
+        if isempty(H3)
+            H3(1) = 0;
+        end
+        if length(H2) > beta*(length(H1)+length(H3))
+            delta_phi_a(i,j) = median([H1 H2 H3]);
+        elseif length(H2)<= beta*(length(H1)+length(H3)) & length(H3) > length(H1) & length(H3) < gamma*G & length(H1) < length(H2)
+            delta_phi_a(i,j) = median([H2 H3]);
+        elseif length(H2)<= beta*(length(H1)+length(H3)) & length(H1) >= length(H3) & length(H1) < gamma*G & length(H3) < length(H2)
+            delta_phi_a(i,j) = median([H1 H2]);
+        elseif length(H2)<= beta*(length(H1)+length(H3)) & length(H3) > length(H1) & length(H3)>= gamma*G
+            delta_phi_a(i,j) = median(H3);
+        elseif length(H2)<= beta*(length(H1)+length(H3)) & length(H3) > length(H1) & length(H1)>=length(H2)
+            delta_phi_a(i,j) = median(H3);
+        elseif length(H2)<= beta*(length(H1)+length(H3)) & length(H1) >= length(H3) & length(H1)<= gamma*G
+            delta_phi_a(i,j) = median(H1);
+        elseif length(H2)<= beta*(length(H1)+length(H3)) & length(H1) >= length(H3) & length(H3)>= length(H2)
+            delta_phi_a(i,j) = median(H1);
+        end
+    end
+end
 
-unwrap_img_after1 = unwrap_phase(delta_phi);
+delta_phi_a(isnan(delta_phi_a))=0; %set all NaN value in deltaphi =0
+filtereffect_0 = delta_phi_a - delta_phi_o;
+
+unwrap_img_after1 = unwrap_phase(delta_phi_a);
 unwrap_img_after2 = unwrap_phase(unwrap_img_after1);
 
 unwrap_img_after3 = medfilt2(unwrap_img_after2,[10 10]);
+unwrap_img_after4 = unwrap_phase(unwrap_img_after3);
+
+%place the reference plane to zero
+B = unwrap_img_after4(30,:);
+TFb = islocalmin(B);
+%[r,c] = find(TF);
+min_valueb = B(TFb);
+
+tfb = min_valueb < 24; 
+min_value_reshapeb = min_valueb(tfb);
+Mean_liftb = mean(reshape(min_value_reshapeb,1,[]));
+
+unwrap_img_after5 = unwrap_img_after4 - Mean_liftb;
+
+%height calibration
+cali_factor = 2.8/0.7561;
+caliheight = cali_factor * unwrap_img_after5;
 
 figure(77)
-imshow(unwrap_img_after3,[]);
+imshow(unwrap_img_after5,[]);
 figure(78);
-mesh(unwrap_img_after3);
-
-nPixelx = (-512:511);
-nPixely = (-640:639);
-ux = nPixelx/1024;
-uy = nPixely/1280;
-Y_freq = fftshift(fft(fftshift(unwrap_img_after3)))./numel(unwrap_img_after3);
-%Y_freq(abs(Y_freq) > 10^5) = 0;
-unwrap_again = ifft2(Y_freq);
-FINAL_IM = uint8(real(unwrap_again));
+mesh(unwrap_img_after5);
 
 
 %{
@@ -339,33 +378,253 @@ worlddistance = AC_pixel * worlddist_to_pixel_ratio_mm;
 height = (worlddistance .* L)./(d + worlddistance);
 figure (77);mesh(height)
 
+height information 2
+coin_phase = 
+coin_height = 2.9mm;
+
+cone_phase = max(unwrap_phase_after4);
+height = (coin_height/coin_phase)*cone_phase; 
 %}
+%}
+
+
+
+
+%calibration
+%shift needed to let all min fringe intensity at approx 0
+I_1_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\14022020\only fringe 1 f20.bmp');
+
+A = I_1_0(30,:);
+TF = islocalmin(A);
+[r,c] = find(TF);
+min_value = A(TF);
+
+tf = min_value < 80; 
+min_value_reshape = min_value(tf);
+Mean_lift = mean(reshape(min_value_reshape,1,[]));
+
+
+%%%read phi with object
+I_1= imread('D:\IC\Master degree\Laboratory\System Design\experiment\14022020\fringe 1 f20.bmp');
+
+[m n] = size(I_1);
+I_2= imread('D:\IC\Master degree\Laboratory\System Design\experiment\14022020\fringe 2 f20.bmp');
+
+ 
+I_3= imread('D:\IC\Master degree\Laboratory\System Design\experiment\14022020\fringe 3 f20.bmp');
+
+I_4= imread('D:\IC\Master degree\Laboratory\System Design\experiment\14022020\fringe 4 f20.bmp');
+%I_5 = imread('D:\IC\Master degree\Laboratory\System Design\experiment\14022020\fringe 5 f20.bmp');
+%I_6 = imread('D:\IC\Master degree\Laboratory\System Design\experiment\14022020\fringe 6 f20.bmp');
+ 
+I_1=mat2gray((I_1), [0 100000]); %mat2gray converts the matrix to an intensity image I that contains values in the range 0 (black) to 1 (white). amin and amax are the values in A that correspond to 0 and 1 in I. Values less than amin become 0, and values greater than amax become 1.
+I_2=mat2gray((I_2), [0 100000]);
+I_3=mat2gray((I_3), [0 100000]);
+I_4=mat2gray((I_4), [0 100000]);
+%I_5=mat2gray((I_5), [0 100000]);
+%I_6=mat2gray((I_6), [0 100000]);
+
+
+%4 step algorithm
+A=(I_4 - I_2 );
+
+B=(I_1 - I_3);
+
+ for i=1:m
+     for j=1:n
+         phi(i,j)= atan2(B(i,j),A(i,j));
+         
+     end
+ end
+
 %{
-%automatic noise treatment
-TF = ischange(unwrap_img,'linear');
-[x,y]=find(TF==1);
-xyCoords = [x,y];
+%6 step algorithm
+%2
 
-%find the upper right corner noise pixels
-x1 = xyCoords(:,1) >= 550;
-% Now determine when y is in range.
-y1 = xyCoords(:,2) >= 848;
-% Now determine when both x and y are in range.
-both_in_range = x1 & y1;
-% Now extract those rows where both are in range.
-out = xyCoords(both_in_range, :);%cropped coordinates
-x2 = out(:,1);%cropped x coordinate
-y2 = out(:,2);%cropped y coordinate
+A = -sqrt(3)*(I_2 + I_3 - I_5 - I_6);
+B = 2*I_1 + I_2 - I_3 - 2*I_4 - I_5 + I_6;
+
+for i=1:m
+     for j=1:n
+         phi(i,j)= atan2(B(i,j),A(i,j));
+         
+     end
+end
+%}
+ 
+ 
+phi = phi - Mean_lift(ones(m,n));
 
 
-for i = 1:length(x)
-    A = unwrap_img(x(i,1)-2:x(i,1)+2,y(i,1)-2:y(i,1)+2);
-    unwrap_img(x(i),y(i)) = mean(mean(A),2);
+%%%read phi without object
+I_1_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\14022020\only fringe 1 f20.bmp');
+
+[m n] = size(I_1);
+I_2_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\14022020\only fringe 2 f20.bmp');
+
+ 
+I_3_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\14022020\only fringe 3 f20.bmp');
+
+I_4_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\14022020\only fringe 4 f20.bmp');
+%I_5_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\14022020\only fringe 5 f20.bmp');
+
+%I_6_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\14022020\only fringe 6 f20.bmp');
+
+ 
+I_1_0=mat2gray((I_1_0), [0 100000]); %mat2gray converts the matrix to an intensity image I that contains values in the range 0 (black) to 1 (white). amin and amax are the values in A that correspond to 0 and 1 in I. Values less than amin become 0, and values greater than amax become 1.
+I_2_0=mat2gray((I_2_0), [0 100000]);
+I_3_0=mat2gray((I_3_0), [0 100000]);
+I_4_0=mat2gray((I_4_0), [0 100000]);
+%I_5_0=mat2gray((I_5_0), [0 100000]);
+%I_6_0=mat2gray((I_6_0), [0 100000]);
+
+
+%4 step algorithm
+A0=(I_4_0 - I_2_0 );
+B0=(I_1_0 - I_3_0);
+
+ for i=1:m
+     for j=1:n
+         phi_0(i,j)= atan2(B0(i,j),A0(i,j));
+
+     end
+ end
+
+%{
+%6 step algorithm
+%2
+
+A0 = -sqrt(3)*(I_2_0 + I_3_0 - I_5_0 - I_6_0);
+B0 = 2*I_1_0 + I_2_0 - I_3_0 - 2*I_4_0 - I_5_0 + I_6_0;
+
+for i=1:m
+     for j=1:n
+         phi_0(i,j)= atan2(B0(i,j),A0(i,j));
+         
+     end
+end
+%}
+ 
+phi_0 = phi_0 - Mean_lift(ones(m,n));
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%Unwrapping Method 3%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%Noise reduction Filter
+
+%Unwrap object phi
+delta_phi_o = phi-phi_0;
+
+delta_phi_o(isnan(delta_phi_o))=0; %set all NaN value in deltaphi =0
+
+delta_phi_a = delta_phi_o;
+
+%%%noise prefilter
+alpha = pi/2;
+beta = 1;
+gamma = 0.5;
+windowsize = 9;
+
+
+for i = 5:1018
+    for j = 5:1275
+        window = delta_phi_o(i-4:i+4,j-4:j+4);
+        H1 = [];
+        H2 = [];
+        H3 = [];
+        for p = 1:windowsize
+            for q = 1:windowsize
+                if p == 1 & q ~= 1 & q ~= windowsize
+                    if abs(window(p,q+1) - window(p,q)) > pi & abs(window(p,q) - window(p,q-1)) > pi
+                        window(p,q) = 0;
+                    else
+                    end
+                elseif p == windowsize & q ~= 1 & q ~= windowsize
+                     if abs(window(p,q+1) - window(p,q)) > pi & abs(window(p,q) - window(p,q-1)) > pi
+                        window(p,q) = 0;
+                    else
+                     end
+                
+                elseif q ~= 1 & q ~= windowsize
+                    if abs(window(p,q+1) - window(p,q)) > pi & abs(window(p,q) - window(p,q-1)) > pi
+                        window(p,q) = 0;
+                    elseif abs(window(p+1,q) - window(p)) > pi & abs(window(p,q) - window(p-1,q)) > pi
+                        window(p,q) = 0;
+                    else
+                    end
+                else
+                end
+                
+                if window(p,q) < -alpha
+                    H1 = [H1 window(p,q)];
+                    
+                elseif window(p,q) >= -alpha & window(p,q) <= alpha & window(p,q)~=0
+                    H2 = [H2 window(p,q)];
+                
+                elseif window(p,q) > alpha
+                    H3 = [H3 window(p,q)];
+                else
+                 
+                end
+            end
+        end
+        
+        G = length(H1) + length(H2) + length(H3);
+        if isempty(H1)
+            H1(1) = 0;
+        end
+        if isempty(H2)
+            H2(1) = 0;
+        end
+        if isempty(H3)
+            H3(1) = 0;
+        end
+        if length(H2) > beta*(length(H1)+length(H3))
+            delta_phi_a(i,j) = median([H1 H2 H3]);
+        elseif length(H2)<= beta*(length(H1)+length(H3)) & length(H3) > length(H1) & length(H3) < gamma*G & length(H1) < length(H2)
+            delta_phi_a(i,j) = median([H2 H3]);
+        elseif length(H2)<= beta*(length(H1)+length(H3)) & length(H1) >= length(H3) & length(H1) < gamma*G & length(H3) < length(H2)
+            delta_phi_a(i,j) = median([H1 H2]);
+        elseif length(H2)<= beta*(length(H1)+length(H3)) & length(H3) > length(H1) & length(H3)>= gamma*G
+            delta_phi_a(i,j) = median(H3);
+        elseif length(H2)<= beta*(length(H1)+length(H3)) & length(H3) > length(H1) & length(H1)>=length(H2)
+            delta_phi_a(i,j) = median(H3);
+        elseif length(H2)<= beta*(length(H1)+length(H3)) & length(H1) >= length(H3) & length(H1)<= gamma*G
+            delta_phi_a(i,j) = median(H1);
+        elseif length(H2)<= beta*(length(H1)+length(H3)) & length(H1) >= length(H3) & length(H3)>= length(H2)
+            delta_phi_a(i,j) = median(H1);
+        end
+    end
 end
 
-TF2 = ischange(unwrap_img,'linear');
-[x3,y3]=find(TF2==1);
-%}
+delta_phi_a(isnan(delta_phi_a))=0; %set all NaN value in deltaphi =0
+filtereffect = delta_phi_a - delta_phi_o;
+                    
+
+
+unwrap_img_after1 = unwrap_phase(delta_phi_a);
+unwrap_img_after2 = unwrap_phase(unwrap_img_after1);
+
+unwrap_img_after3 = medfilt2(unwrap_img_after2,[10 10]);
+unwrap_img_after4 = unwrap_phase(unwrap_img_after3);
+
+
+%find maximal points which indicates coin height
+C = unwrap_img_after4;
+TFc = islocalmax(C);
+%[r,c] = find(TF);
+min_valuec = C(TFc);
+tfc = min_valuec > 0.5; 
+mean_height = mean(min_valuec(tfc));
+
+%error on phase height
+TFd = find(C > 0.5);
+phaseheight = C(TFd);
+variance = std(phaseheight,0,'all');
+
+figure(77)
+imshow(unwrap_img_after4,[]);
+figure(78);
+mesh(unwrap_img_after4);
 
 
 
@@ -495,7 +754,4 @@ function [h_edges, v_edges] = get_edges(rel)
     h_edges = [rel(1:end, 2:end) + rel(1:end, 1:end-1), nan(Ny, 1)];
     v_edges = [rel(2:end, 1:end) + rel(1:end-1, 1:end); nan(1, Nx)];
 end
-
-
-
 
