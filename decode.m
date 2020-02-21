@@ -5,9 +5,10 @@ clear all;
 close all;
 clc
 
-%{
+
 %shift needed to let all min fringe intensity at approx 0
-I_1_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\17022020\only fringes adjusted\only fringe 1 f20.bmp');
+tic
+I_1_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\reference plane\only fringe 1 f20.bmp');
 
 A = I_1_0(30,:);
 TF = islocalmin(A);
@@ -20,19 +21,19 @@ Mean_lift = mean(reshape(min_value_reshape,1,[]));
 
 
 %%%read phi with object
-I_1= imread('D:\IC\Master degree\Laboratory\System Design\experiment\17022020\adjusted cone\fringe 1 f20.bmp');
+I_1= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\3 paper\fringe 1 f20.bmp');
 
 [m n] = size(I_1);
-I_2= imread('D:\IC\Master degree\Laboratory\System Design\experiment\17022020\adjusted cone\fringe 2 f20.bmp');
+I_2= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\3 paper\fringe 2 f20.bmp');
 
  
-I_3= imread('D:\IC\Master degree\Laboratory\System Design\experiment\17022020\adjusted cone\fringe 3 f20.bmp');
+I_3= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\3 paper\fringe 3 f20.bmp');
 
-I_4= imread('D:\IC\Master degree\Laboratory\System Design\experiment\17022020\adjusted cone\fringe 4 f20.bmp');
+I_4= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\3 paper\fringe 4 f20.bmp');
 
-I_5= imread('D:\IC\Master degree\Laboratory\System Design\experiment\17022020\adjusted cone\fringe 5 f20.bmp');
+I_5= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\3 paper\fringe 5 f20.bmp');
 
-I_6= imread('D:\IC\Master degree\Laboratory\System Design\experiment\17022020\adjusted cone\fringe 6 f20.bmp');
+I_6= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\3 paper\fringe 6 f20.bmp');
 
  
 I_1=mat2gray((I_1), [0 100000]); %mat2gray converts the matrix to an intensity image I that contains values in the range 0 (black) to 1 (white). amin and amax are the values in A that correspond to 0 and 1 in I. Values less than amin become 0, and values greater than amax become 1.
@@ -78,19 +79,19 @@ phi = phi - Mean_lift(ones(m,n));
 
 
 %%%read phi without object
-I_1_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\17022020\only fringes adjusted\only fringe 1 f20.bmp');
+I_1_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\reference plane\only fringe 1 f20.bmp');
 
 [m n] = size(I_1);
-I_2_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\17022020\only fringes adjusted\only fringe 2 f20.bmp');
+I_2_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\reference plane\only fringe 2 f20.bmp');
 
  
-I_3_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\17022020\only fringes adjusted\only fringe 3 f20.bmp');
+I_3_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\reference plane\only fringe 3 f20.bmp');
 
-I_4_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\17022020\only fringes adjusted\only fringe 4 f20.bmp');
+I_4_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\reference plane\only fringe 4 f20.bmp');
 
-I_5_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\17022020\only fringes adjusted\only fringe 5 f20.bmp');
+I_5_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\reference plane\only fringe 5 f20.bmp');
 
-I_6_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\17022020\only fringes adjusted\only fringe 6 f20.bmp');
+I_6_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\reference plane\only fringe 6 f20.bmp');
 
  
 I_1_0=mat2gray((I_1_0), [0 100000]); %mat2gray converts the matrix to an intensity image I that contains values in the range 0 (black) to 1 (white). amin and amax are the values in A that correspond to 0 and 1 in I. Values less than amin become 0, and values greater than amax become 1.
@@ -338,14 +339,17 @@ Mean_liftb = mean(reshape(min_value_reshapeb,1,[]));
 unwrap_img_after5 = unwrap_img_after4 - Mean_liftb;
 
 %height calibration
-cali_factor = 2.8/0.7561;
+cali_factor = 2.87/0.6860;
 caliheight = cali_factor * unwrap_img_after5;
 
-figure(77)
+figure(66)
 imshow(unwrap_img_after5,[]);
-figure(78);
+figure(67);
 mesh(unwrap_img_after5);
 
+figure(68);
+mesh(caliheight);
+toc
 
 %{
 %Noise evaluation
@@ -385,14 +389,15 @@ coin_height = 2.9mm;
 cone_phase = max(unwrap_phase_after4);
 height = (coin_height/coin_phase)*cone_phase; 
 %}
-%}
 
 
 
 
+%{
 %calibration
 %shift needed to let all min fringe intensity at approx 0
-I_1_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\14022020\only fringe 1 f20.bmp');
+tic
+I_1_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\reference plane\only fringe 1 f20.bmp');
 
 A = I_1_0(30,:);
 TF = islocalmin(A);
@@ -405,26 +410,26 @@ Mean_lift = mean(reshape(min_value_reshape,1,[]));
 
 
 %%%read phi with object
-I_1= imread('D:\IC\Master degree\Laboratory\System Design\experiment\14022020\fringe 1 f20.bmp');
+I_1= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\calibration coin\fringe 1 f20.bmp');
 
 [m n] = size(I_1);
-I_2= imread('D:\IC\Master degree\Laboratory\System Design\experiment\14022020\fringe 2 f20.bmp');
+I_2= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\calibration coin\fringe 2 f20.bmp');
 
  
-I_3= imread('D:\IC\Master degree\Laboratory\System Design\experiment\14022020\fringe 3 f20.bmp');
+I_3= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\calibration coin\fringe 3 f20.bmp');
 
-I_4= imread('D:\IC\Master degree\Laboratory\System Design\experiment\14022020\fringe 4 f20.bmp');
-%I_5 = imread('D:\IC\Master degree\Laboratory\System Design\experiment\14022020\fringe 5 f20.bmp');
-%I_6 = imread('D:\IC\Master degree\Laboratory\System Design\experiment\14022020\fringe 6 f20.bmp');
+I_4= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\calibration coin\fringe 4 f20.bmp');
+I_5 = imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\calibration coin\fringe 5 f20.bmp');
+I_6 = imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\calibration coin\fringe 6 f20.bmp');
  
 I_1=mat2gray((I_1), [0 100000]); %mat2gray converts the matrix to an intensity image I that contains values in the range 0 (black) to 1 (white). amin and amax are the values in A that correspond to 0 and 1 in I. Values less than amin become 0, and values greater than amax become 1.
 I_2=mat2gray((I_2), [0 100000]);
 I_3=mat2gray((I_3), [0 100000]);
 I_4=mat2gray((I_4), [0 100000]);
-%I_5=mat2gray((I_5), [0 100000]);
-%I_6=mat2gray((I_6), [0 100000]);
+I_5=mat2gray((I_5), [0 100000]);
+I_6=mat2gray((I_6), [0 100000]);
 
-
+%{
 %4 step algorithm
 A=(I_4 - I_2 );
 
@@ -436,8 +441,8 @@ B=(I_1 - I_3);
          
      end
  end
+%}
 
-%{
 %6 step algorithm
 %2
 
@@ -450,35 +455,35 @@ for i=1:m
          
      end
 end
-%}
+
  
  
 phi = phi - Mean_lift(ones(m,n));
 
 
 %%%read phi without object
-I_1_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\14022020\only fringe 1 f20.bmp');
+I_1_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\reference plane\only fringe 1 f20.bmp');
 
 [m n] = size(I_1);
-I_2_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\14022020\only fringe 2 f20.bmp');
+I_2_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\reference plane\only fringe 2 f20.bmp');
 
  
-I_3_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\14022020\only fringe 3 f20.bmp');
+I_3_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\reference plane\only fringe 3 f20.bmp');
 
-I_4_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\14022020\only fringe 4 f20.bmp');
-%I_5_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\14022020\only fringe 5 f20.bmp');
+I_4_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\reference plane\only fringe 4 f20.bmp');
+I_5_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\reference plane\only fringe 5 f20.bmp');
 
-%I_6_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\14022020\only fringe 6 f20.bmp');
+I_6_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\reference plane\only fringe 6 f20.bmp');
 
  
 I_1_0=mat2gray((I_1_0), [0 100000]); %mat2gray converts the matrix to an intensity image I that contains values in the range 0 (black) to 1 (white). amin and amax are the values in A that correspond to 0 and 1 in I. Values less than amin become 0, and values greater than amax become 1.
 I_2_0=mat2gray((I_2_0), [0 100000]);
 I_3_0=mat2gray((I_3_0), [0 100000]);
 I_4_0=mat2gray((I_4_0), [0 100000]);
-%I_5_0=mat2gray((I_5_0), [0 100000]);
-%I_6_0=mat2gray((I_6_0), [0 100000]);
+I_5_0=mat2gray((I_5_0), [0 100000]);
+I_6_0=mat2gray((I_6_0), [0 100000]);
 
-
+%{
 %4 step algorithm
 A0=(I_4_0 - I_2_0 );
 B0=(I_1_0 - I_3_0);
@@ -489,8 +494,8 @@ B0=(I_1_0 - I_3_0);
 
      end
  end
+%}
 
-%{
 %6 step algorithm
 %2
 
@@ -503,7 +508,7 @@ for i=1:m
          
      end
 end
-%}
+
  
 phi_0 = phi_0 - Mean_lift(ones(m,n));
 
@@ -627,6 +632,14 @@ figure(78);
 mesh(unwrap_img_after4);
 
 
+%3D info
+[x,y] = meshgrid(0:2:2558,0:2:2046);
+figure(79);
+mesh(x,y,unwrap_img_after4);
+
+
+toc
+%}
 
 function res_img = unwrap_phase(img)
     [Ny, Nx] = size(img);
