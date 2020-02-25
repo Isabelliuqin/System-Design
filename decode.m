@@ -8,7 +8,7 @@ clc
 
 %shift needed to let all min fringe intensity at approx 0
 tic
-I_1_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\reference plane\only fringe 1 f20.bmp');
+I_1_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\24022020\only\only fringe 1.bmp');
 
 A = I_1_0(30,:);
 TF = islocalmin(A);
@@ -21,19 +21,19 @@ Mean_lift = mean(reshape(min_value_reshape,1,[]));
 
 
 %%%read phi with object
-I_1= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\3 paper\fringe 1 f20.bmp');
+I_1= imread('D:\IC\Master degree\Laboratory\System Design\experiment\24022020\wire\fringe 1.bmp');
 
 [m n] = size(I_1);
-I_2= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\3 paper\fringe 2 f20.bmp');
+I_2= imread('D:\IC\Master degree\Laboratory\System Design\experiment\24022020\wire\fringe 2.bmp');
 
  
-I_3= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\3 paper\fringe 3 f20.bmp');
+I_3= imread('D:\IC\Master degree\Laboratory\System Design\experiment\24022020\wire\fringe 3.bmp');
 
-I_4= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\3 paper\fringe 4 f20.bmp');
+I_4= imread('D:\IC\Master degree\Laboratory\System Design\experiment\24022020\wire\fringe 4.bmp');
 
-I_5= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\3 paper\fringe 5 f20.bmp');
+I_5= imread('D:\IC\Master degree\Laboratory\System Design\experiment\24022020\wire\fringe 5.bmp');
 
-I_6= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\3 paper\fringe 6 f20.bmp');
+I_6= imread('D:\IC\Master degree\Laboratory\System Design\experiment\24022020\wire\fringe 6.bmp');
 
  
 I_1=mat2gray((I_1), [0 100000]); %mat2gray converts the matrix to an intensity image I that contains values in the range 0 (black) to 1 (white). amin and amax are the values in A that correspond to 0 and 1 in I. Values less than amin become 0, and values greater than amax become 1.
@@ -44,7 +44,7 @@ I_5=mat2gray((I_5), [0 100000]);
 I_6=mat2gray((I_6), [0 100000]);
 
 
-%{
+
 %4 step algorithm
 A=(I_4 - I_2 );
 
@@ -57,9 +57,9 @@ for i=1:m
          
      end
 end
-%}
 
 
+%{
 %6 step algorithm
 
 %2
@@ -73,25 +73,25 @@ for i=1:m
          
      end
 end
- 
+%}
 
 phi = phi - Mean_lift(ones(m,n));
 
 
 %%%read phi without object
-I_1_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\reference plane\only fringe 1 f20.bmp');
+I_1_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\24022020\only\only fringe 1.bmp');
 
 [m n] = size(I_1);
-I_2_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\reference plane\only fringe 2 f20.bmp');
+I_2_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\24022020\only\only fringe 2.bmp');
 
  
-I_3_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\reference plane\only fringe 3 f20.bmp');
+I_3_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\24022020\only\only fringe 3.bmp');
 
-I_4_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\reference plane\only fringe 4 f20.bmp');
+I_4_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\24022020\only\only fringe 4.bmp');
 
-I_5_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\reference plane\only fringe 5 f20.bmp');
+I_5_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\24022020\only\only fringe 5.bmp');
 
-I_6_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\reference plane\only fringe 6 f20.bmp');
+I_6_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\24022020\only\only fringe 6.bmp');
 
  
 I_1_0=mat2gray((I_1_0), [0 100000]); %mat2gray converts the matrix to an intensity image I that contains values in the range 0 (black) to 1 (white). amin and amax are the values in A that correspond to 0 and 1 in I. Values less than amin become 0, and values greater than amax become 1.
@@ -101,26 +101,21 @@ I_4_0=mat2gray((I_4_0), [0 100000]);
 I_5_0=mat2gray((I_5_0), [0 100000]);
 I_6_0=mat2gray((I_6_0), [0 100000]);
 
-%{
+
 %4 step algorithm
 A0=(I_4_0 - I_2_0 );
 B0=(I_1_0 - I_3_0);
-%{
-A0 = -3*I_2 + 4*I_4 - I_6;
-B0 = I_1 - 4*I_3+3*I_5;
-%}
+
  for i=1:m
      for j=1:n
          phi_0(i,j)= atan2(B0(i,j),A0(i,j));
 
      end
  end
-%} 
+ 
 
-
+%{
 %6 step algorithm
-
-%2
 
 A0 = -sqrt(3)*(I_2_0 + I_3_0 - I_5_0 - I_6_0);
 B0 = 2*I_1_0 + I_2_0 - I_3_0 - 2*I_4_0 - I_5_0 + I_6_0;
@@ -131,76 +126,12 @@ for i=1:m
          
      end
 end
-
+%}
 phi_0 = phi_0 - Mean_lift(ones(m,n));
 
 %%%UNWRAPPING METHODS
 
 
-%{
-%%%%%%%%%%%%%%%%%%%%Unwrapping Method 2%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-
-%Unwrap object phi
-tic;
-image1_unwrapped = phi;
-q=im2double(image1_unwrapped);
-q(400:end,:)=unwrap(q(400:end,:),[],1);
-q=flipud(q);
-q(400:end,:)=unwrap(q(400:end,:),[],1);
-q(:,640:end)=unwrap(q(:,640:end),[],2);
-q=fliplr(q);
-q(:,640:end)=unwrap(q(:,640:end),[],2);
-q=flipud(fliplr(q));
-image1_unwrapped = q;
-toc;
-
-%Unwrap reference phi
-image1_unwrapped_0 = phi_0;
-q=im2double(image1_unwrapped_0);
-q(400:end,:)=unwrap(q(400:end,:),[],1);
-q=flipud(q);
-q(400:end,:)=unwrap(q(400:end,:),[],1);
-q(:,640:end)=unwrap(q(:,640:end),[],2);
-q=fliplr(q);
-q(:,640:end)=unwrap(q(:,640:end),[],2);
-q=flipud(fliplr(q));
-image1_unwrapped_0 = q;
-
-figure(6);
-imshow(image1_unwrapped,[])
-
-figure(60);
-imshow(image1_unwrapped_0,[])
-
-ave_col1 = mean(image1_unwrapped(:,1));
-ave_col1_0 = mean(image1_unwrapped_0(:,1));
-
-a = ave_col1;
-Ave_col1 = a(ones(m, n));
-
-b = ave_col1_0;
-Ave_col1_0 = b(ones(m, n));
-
-image1_unwrapped = image1_unwrapped - ave_col1;
-image1_unwrapped_0 = image1_unwrapped_0 - ave_col1_0;
-
-delta_phi = image1_unwrapped-image1_unwrapped_0;
-
-figure(66),mesh(delta_phi);
-
-
-%Noise evaluation
-
-True_h = nu;
-
-N = 
-
-Variance = sum((X-True_h)^2)/N;
-
-height_array = True_h(one(m,n));
-dif_from_truth = abs(X - height_array);
-total_dif = sum(dif_from_truth, 'all');
-%}
 
 %%%Noise reduction Filter
 
@@ -216,6 +147,7 @@ unwrap_img = unwrap_phase(phi);
 
 
 figure(7)
+
 imshow(unwrap_img,[])
 pcolor(unwrap_img)
 shading flat;
@@ -329,67 +261,53 @@ unwrap_img_after4 = unwrap_phase(unwrap_img_after3);
 %place the reference plane to zero
 B = unwrap_img_after4(30,:);
 TFb = islocalmin(B);
-%[r,c] = find(TF);
 min_valueb = B(TFb);
 
-tfb = min_valueb < 24; 
+tfb = min_valueb < 45; 
 min_value_reshapeb = min_valueb(tfb);
 Mean_liftb = mean(reshape(min_value_reshapeb,1,[]));
 
 unwrap_img_after5 = unwrap_img_after4 - Mean_liftb;
-
-%height calibration
-cali_factor = 2.87/0.6860;
-caliheight = cali_factor * unwrap_img_after5;
 
 figure(66)
 imshow(unwrap_img_after5,[]);
 figure(67);
 mesh(unwrap_img_after5);
 
-figure(68);
-mesh(caliheight);
+%height calibration
+cali_factor = 2.9/0.5994;
+caliheight = cali_factor * unwrap_img_after5;
+
+
+
+
 toc
 
-%{
-%Noise evaluation
-
-True_h = nu;
-
-N = 
-
-Variance = sum((X-True_h)^2)/N;
-
-height_array = True_h(one(m,n));
-dif_from_truth = abs(X - height_array);
-total_dif = sum(dif_from_truth, 'all');
-
-%height information
-
-lambda = 41.5;
-worlddist_to_pixel_ratio_mm = 63.5/600;
-pupil_sep_d = 190;
-L = 770;
-
-d = pupil_sep_d(ones(m, n));
-L = L(ones(m, n));
+%max(max(caliheight))
 
 
-AC_pixel = unwrap_img_after3 * lambda /(2*pi);
+%average height
 
-worlddistance = AC_pixel * worlddist_to_pixel_ratio_mm;
+E = caliheight(1024,:);
+E(E>1)=0;
+caliheight(1024,:)=E;
 
-height = (worlddistance .* L)./(d + worlddistance);
-figure (77);mesh(height)
+F = caliheight(:,1280);
+F(F>1)=0;
+caliheight(:,1280) = F;
 
-height information 2
-coin_phase = 
-coin_height = 2.9mm;
+figure(68);
+%mesh(caliheight);
+[x,y] = meshgrid(0:52/732:1279*52/732,0:52/732:1023*52/732);
+mesh(x,y,caliheight);
+ax = gca;
+ax.FontSize = 25;
+xlabel('x(mm)','FontSize',25);
+ylabel('y(mm)','FontSize',25);
+zlabel('height(mm)','FontSize',25);
 
-cone_phase = max(unwrap_phase_after4);
-height = (coin_height/coin_phase)*cone_phase; 
-%}
-
+h_array = caliheight(caliheight>0.1);
+h_ave = mean(h_array,'all');
 
 
 
@@ -397,7 +315,7 @@ height = (coin_height/coin_phase)*cone_phase;
 %calibration
 %shift needed to let all min fringe intensity at approx 0
 tic
-I_1_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\reference plane\only fringe 1 f20.bmp');
+I_1_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\24022020\only\only fringe 1.bmp');
 
 A = I_1_0(30,:);
 TF = islocalmin(A);
@@ -410,17 +328,17 @@ Mean_lift = mean(reshape(min_value_reshape,1,[]));
 
 
 %%%read phi with object
-I_1= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\calibration coin\fringe 1 f20.bmp');
+I_1= imread('D:\IC\Master degree\Laboratory\System Design\experiment\24022020\calibration coin\fringe 1.bmp');
 
 [m n] = size(I_1);
-I_2= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\calibration coin\fringe 2 f20.bmp');
+I_2= imread('D:\IC\Master degree\Laboratory\System Design\experiment\24022020\calibration coin\fringe 2.bmp');
 
  
-I_3= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\calibration coin\fringe 3 f20.bmp');
+I_3= imread('D:\IC\Master degree\Laboratory\System Design\experiment\24022020\calibration coin\fringe 3.bmp');
 
-I_4= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\calibration coin\fringe 4 f20.bmp');
-I_5 = imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\calibration coin\fringe 5 f20.bmp');
-I_6 = imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\calibration coin\fringe 6 f20.bmp');
+I_4= imread('D:\IC\Master degree\Laboratory\System Design\experiment\24022020\calibration coin\fringe 4.bmp');
+I_5 = imread('D:\IC\Master degree\Laboratory\System Design\experiment\24022020\calibration coin\fringe 5.bmp');
+I_6 = imread('D:\IC\Master degree\Laboratory\System Design\experiment\24022020\calibration coin\fringe 6.bmp');
  
 I_1=mat2gray((I_1), [0 100000]); %mat2gray converts the matrix to an intensity image I that contains values in the range 0 (black) to 1 (white). amin and amax are the values in A that correspond to 0 and 1 in I. Values less than amin become 0, and values greater than amax become 1.
 I_2=mat2gray((I_2), [0 100000]);
@@ -444,7 +362,7 @@ B=(I_1 - I_3);
 %}
 
 %6 step algorithm
-%2
+
 
 A = -sqrt(3)*(I_2 + I_3 - I_5 - I_6);
 B = 2*I_1 + I_2 - I_3 - 2*I_4 - I_5 + I_6;
@@ -462,18 +380,18 @@ phi = phi - Mean_lift(ones(m,n));
 
 
 %%%read phi without object
-I_1_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\reference plane\only fringe 1 f20.bmp');
+I_1_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\24022020\only\only fringe 1.bmp');
 
 [m n] = size(I_1);
-I_2_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\reference plane\only fringe 2 f20.bmp');
+I_2_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\24022020\only\only fringe 2.bmp');
 
  
-I_3_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\reference plane\only fringe 3 f20.bmp');
+I_3_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\24022020\only\only fringe 3.bmp');
 
-I_4_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\reference plane\only fringe 4 f20.bmp');
-I_5_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\reference plane\only fringe 5 f20.bmp');
+I_4_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\24022020\only\only fringe 4.bmp');
+I_5_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\24022020\only\only fringe 5.bmp');
 
-I_6_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\21022020\reference plane\only fringe 6 f20.bmp');
+I_6_0= imread('D:\IC\Master degree\Laboratory\System Design\experiment\24022020\only\only fringe 6.bmp');
 
  
 I_1_0=mat2gray((I_1_0), [0 100000]); %mat2gray converts the matrix to an intensity image I that contains values in the range 0 (black) to 1 (white). amin and amax are the values in A that correspond to 0 and 1 in I. Values less than amin become 0, and values greater than amax become 1.
@@ -497,7 +415,6 @@ B0=(I_1_0 - I_3_0);
 %}
 
 %6 step algorithm
-%2
 
 A0 = -sqrt(3)*(I_2_0 + I_3_0 - I_5_0 - I_6_0);
 B0 = 2*I_1_0 + I_2_0 - I_3_0 - 2*I_4_0 - I_5_0 + I_6_0;
@@ -615,16 +532,15 @@ unwrap_img_after4 = unwrap_phase(unwrap_img_after3);
 
 %find maximal points which indicates coin height
 C = unwrap_img_after4;
-TFc = islocalmax(C);
+%TFc = islocalmax(C);
 %[r,c] = find(TF);
-min_valuec = C(TFc);
-tfc = min_valuec > 0.5; 
-mean_height = mean(min_valuec(tfc));
+%min_valuec = C(TFc);
+%tfc = min_valuec > 0.5; 
 
-%error on phase height
-TFd = find(C > 0.5);
-phaseheight = C(TFd);
-variance = std(phaseheight,0,'all');
+phase_heightarray = C(C>0.5);
+mean_height = mean(phase_heightarray,'all');
+stand_dev = std(phase_heightarray,0,'all');
+
 
 figure(77)
 imshow(unwrap_img_after4,[]);
@@ -633,9 +549,14 @@ mesh(unwrap_img_after4);
 
 
 %3D info
-[x,y] = meshgrid(0:2:2558,0:2:2046);
+[x,y] = meshgrid(0:52/686:1279*52/686,0:51/719:1023*51/719);
 figure(79);
 mesh(x,y,unwrap_img_after4);
+ax = gca;
+ax.FontSize = 25;
+xlabel('x(mm)','FontSize',25);
+ylabel('y(mm)','FontSize',25);
+zlabel('phi(rad)','FontSize',25);
 
 
 toc
